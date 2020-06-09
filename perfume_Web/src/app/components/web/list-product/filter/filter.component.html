@@ -1,0 +1,78 @@
+<form [formGroup]="filterFormGroup">
+    <div class="row">
+        <div class="col-3">
+            <select class="form-control" [formControl]="filterFormGroup.get('producer')">
+                <option [ngValue]="null">==NSX==</option>
+                <option *ngFor="let producer of producers" [ngValue]="producer">{{producer.name}}</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <select class="form-control" [formControl]="filterFormGroup.get('amount')">
+                <option [ngValue]="null">==Nồng Độ==</option>
+                <option *ngFor="let amount of amounts" [ngValue]="amount">{{amount.name}}</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <select class="form-control" [formControl]="filterFormGroup.get('fragrant')">
+                <option [ngValue]="null">==Mùi Hương==</option>
+                <option *ngFor="let fragrant of fragrants" [ngValue]="fragrant">{{fragrant.name}}</option>
+            </select>
+        </div>
+        <div class="col-3">
+            <select class="form-control" [formControl]="filterFormGroup.get('target')">
+                <option [ngValue]="null">==Đối tượng==</option>
+                <option *ngFor="let target of targets" [ngValue]="target">{{target.name}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-2" style="margin-top: 20px">
+            Tính Theo Giá Tiền(VND)
+
+        </div>
+        <div class="col-8">
+            <ng5-slider [(value)]="minPrice" [(highValue)]="maxPrice"
+                        [options]="options"></ng5-slider>
+        </div>
+        <div class="col-2" style="margin-top: 20px">
+            <button (click)="filterAction()" class="btn btn-success w-100">Tìm</button>
+        </div>
+
+    </div>
+    <!--    Nồng Độ Mùi Hương-->
+    <div class="row">
+        <div class="col-sm-12 d-flex  align-items-baseline justify-content-between">
+            <div class="d-inline">
+                <span class="filter-elements tag-elements">Clear Filter
+                     <a (click)="clearFilter()" data-key="capa_id"><i class="fa fa-times"></i></a>
+                  </span>
+                <span class="filter-elements tag-elements" *ngIf="isFilterPrice">{{formatMoney(minPrice)}} - {{formatMoney(maxPrice)}}
+                     <a (click)="clearFilterPrice()" data-key="capa_id"><i class="fa fa-times"></i></a>
+                  </span>
+                <ng-container *ngFor="let item of filterFormGroupValue | keyvalue">
+                    <ng-container *ngIf="item.key != 'oderBy'">
+                        <span *ngIf="item.value" class="filter-elements tag-elements">{{item.value?.name}}
+                            <a (click)="cleanFilterForm(item.key)" data-key="capa_id"><i class="fa fa-times"></i></a>
+                        </span>
+                    </ng-container>
+
+                    <ng-container *ngIf="item.key == 'oderBy'">
+                        <span *ngIf="item.value.value" class="filter-elements tag-elements">{{item.value?.name}}
+                            <a (click)="cleanFilterForm(item.key)" data-key="capa_id"><i class="fa fa-times"></i></a>
+                        </span>
+                    </ng-container>
+                </ng-container>
+
+            </div>
+
+            <div class="d-inline">
+                <select class="form-control" formControlName="oderBy">
+                    <option *ngFor="let oderBy of oderBys" [ngValue]="oderBy">{{oderBy.name}}</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+

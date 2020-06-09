@@ -1,0 +1,46 @@
+{
+	"name": "ckeditor4-angular",
+	"version": "1.0.0",
+	"description": "Official CKEditor 4 component for Angular.",
+	"keywords": [
+		"wysiwyg",
+		"rich text editor",
+		"rte",
+		"editor",
+		"html",
+		"contentEditable",
+		"editing",
+		"angular",
+		"angular5",
+		"ng",
+		"component",
+		"ckeditor",
+		"ckeditor4",
+		"ckeditor 4"
+	],
+	"peerDependencies": {
+		"@angular/core": ">=5.0.0",
+		"@angular/common": ">=5.0.0",
+		"@angular/forms": ">=5.0.0"
+	},
+	"author": "CKSource (https://cksource.com/)",
+	"license": "(GPL-2.0-or-later OR LGPL-2.1-or-later OR MPL-1.1-or-later)",
+	"homepage": "https://ckeditor.com/",
+	"bugs": "https://github.com/ckeditor/ckeditor4-angular/issues",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ckeditor/ckeditor4-angular.git"
+	},
+	"ngPackage": {
+		"lib": {
+			"entryFile": "./ckeditor.module.ts"
+		},
+		"whitelistedNonPeerDependencies": [
+			"."
+		],
+		"dest": "../../dist"
+	},
+	"dependencies": {
+		"load-script": "^1.0.0"
+	}
+}

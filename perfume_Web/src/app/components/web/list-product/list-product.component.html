@@ -1,0 +1,54 @@
+<div
+        class="hero-wrap hero-bread"
+        style="background-image: url('assets/images/bg_6.jpg');"
+>
+    <div class="container">
+        <div
+                class="row no-gutters slider-text align-items-center justify-content-center"
+        >
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs"><span>Danh Sách Sản Phẩm</span></p>
+                <h1 class="mb-0 bread">{{category?.name}}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<section>
+    <div class="container">
+        <app-filter (filter)="filter($event)"></app-filter>
+    </div>
+</section>
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12"></div>
+        </div>
+        <!--END ROW-->
+        <div class="row">
+            <div class="col-md-12 col-lg-12 order-md-last">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex fadeInUp ftco-animated"
+                         *ngFor="let product of products"
+                    >
+                        <app-item-product [product]="product"></app-item-product>
+                    </div>
+                </div>
+                <!--END LIST PRODUCT-->
+                <div class="row mt-5">
+                    <div class="col text-center">
+                        <ngb-pagination
+                                [boundaryLinks]="true"
+                                [collectionSize]="paging.total"
+                                [pageSize]="paging.limit"
+                                [maxSize]="5"
+                                [rotate]="true"
+                                [(page)]="paging.page"
+                                (pageChange)="loadPage(paging.page)"
+                        >
+                        </ngb-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

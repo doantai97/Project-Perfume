@@ -1,0 +1,430 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <!--<div class="card-header">Bộ lọc</div>-->
+                <div class="card-body">
+                    <form [formGroup]="filterForm">
+                        <div class="row">
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="province">Tỉnh/Thành phố</label>
+                                <div class="col-8">
+                                    <select formControlName="provinceId" class="form-control" id="province"
+                                            (change)="loadDistricts()">
+                                        <option [value]="null">==Chọn==</option>
+                                        <option *ngFor="let province of provinces" [value]="province.id">
+                                            {{province.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="district">Quận/Huyện</label>
+                                <div class="col-8">
+                                    <select formControlName="districtId" class="form-control" id="district"
+                                            (change)="loadWards()">
+                                        <option [value]="null">==Chọn==</option>
+                                        <option *ngFor="let district of districts" [value]="district.id">
+                                            {{district.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="ward">Phường/Xã</label>
+                                <div class="col-8">
+                                    <select formControlName="wardId" class="form-control" id="ward">
+                                        <option [value]="null">==Chọn==</option>
+                                        <option *ngFor="let ward of wards" [value]="ward.id">
+                                            {{ward.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="paymentMethod">Thanh toán</label>
+                                <div class="col-8">
+                                    <!--<input class="form-control ng-pristine ng-valid ng-touched"-->
+                                    <!--formcontrolname="requestCode" id="field_requestCode"-->
+                                    <!--placeholder="Mã yêu cầu">-->
+                                    <select class="form-control" id="paymentMethod" formControlName="paymentMethod">
+                                        <option [value]="null">==Chọn==</option>
+                                        <option [value]="PAYMENT_METHOD.COD.value">
+                                            {{PAYMENT_METHOD.COD.label}}
+                                        </option>
+                                        <option [value]="PAYMENT_METHOD.PAYPAL.value">
+                                            {{PAYMENT_METHOD.PAYPAL.label}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="coupon">Mã giảm giá</label>
+                                <div class="col-8">
+
+                                    <select formControlName="isCoupon" class="form-control" id="coupon">
+                                        <option [value]="null">==Chọn==</option>
+                                        <option [value]="true">Có</option>
+                                        <option [value]="false">Không có</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="form-group col-sm-4 row text-color">
+                                <label class="col-4 col-form-label text-right" for="search">Khách hàng</label>
+                                <div class="col-8">
+                                    <input class="form-control" formControlName="search" id="search"
+                                           placeholder="Tìm kiếm theo khách hàng">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-4 row text-color">
+                                <ng-container *ngIf="checkoutStatus === -1">
+                                    <label class="col-4 col-form-label text-right" for="status">Trang thái</label>
+                                    <div class="col-8">
+                                        <!--<input class="form-control ng-pristine ng-valid ng-touched"-->
+                                        <!--formcontrolname="requestCode" id="field_requestCode"-->
+                                        <!--placeholder="Mã yêu cầu">-->
+                                        <select formControlName="status" class="form-control" id="status">
+                                            <option [value]="null">==Chọn==</option>
+                                            <option [value]="item.value"
+                                                    *ngFor="let item of CHECKOUT_STATUS_SELECT">
+                                                {{item.label}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <div class="form-group col-sm-4 text-right">
+                                <div class="btn-group" style="padding-right: 30px">
+                                    <button (click)="filter()" class="btn btn-success">Tìm kiếm</button>
+                                    <button (click)="clearFilter()" class="btn btn-warning">Xóa tìm kiếm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-globe"></i>Quản lý đơn hàng
+                    <span class="float-right">
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-10">
+                            <span class="float-left pr-3" style="line-height: 33px">Limit</span>
+                            <select (change)="changeLimit()" [(ngModel)]="paging.limit" class="form-control float-left"
+                                    style="max-width: 70px" [disabled]="!isAcction">
+                                <option *ngFor="let limitElement of limits"
+                                        value="{{limitElement.value}}">{{limitElement.label}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-2 float-right">
+                            <!--<div class="input-group " style="width: 100%">-->
+                            <!--<input [(ngModel)]="txtSearch" type="text" class="form-control"-->
+                            <!--placeholder="search">-->
+                            <!--<div class="input-group-append">-->
+                            <!--<button (click)="search()" class="btn btn-dark" type="button"-->
+                            <!--[disabled]="!isAcction">-->
+                            <!--<i class="fa fa-search"></i>-->
+                            <!--</button>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+
+                    </div>
+                    <table class="table table-bordered table-sort-icon">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th class="text-center">
+                                Thông tin nhận hàng
+                            </th>
+                            <th class="text-center">
+                                Thơi gian
+                            </th>
+
+                            <th class="text-center">
+                                Địa chỉ
+                            </th>
+
+                            <th class="text-center">
+                                Hình thức thanh toán
+                            </th>
+
+                            <th class="text-center">
+                                Mã giảm giá
+                            </th>
+                            <th>
+                                Tổng tiền
+                            </th>
+                            <th> Giá cuối</th>
+                            <th *ngIf="checkoutStatus === 0">Lý do hủy đơn</th>
+                            <th *ngIf="checkoutStatus === -1">Trang thái</th>
+                            <th class="text-center" style="width: 200px">
+                                #
+                            </th>
+                        </tr>
+                        </thead>
+                        <ng-container *ngIf="checkouts && checkouts.length >= 0">
+                            <tbody *ngFor="let checkout of checkouts; let i=index">
+                            <tr *ngIf="checkout"
+                                [style]="checkout.id === checkoutFormGroup.get('id').value && checkoutFormGroup.get('isShow').value? 'background : #dbcc8f' : ''">
+                                <!--name -->
+                                <td>
+                                    {{i + 1 + paging.offset}}
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.lastname}} {{checkout.firstname}}</span><br>
+                                    <span>{{checkout.email}}</span><br>
+                                    <span>{{checkout.phone}}</span>
+                                </td>
+                                <td>
+                                    <span>Tạo ngày<br> {{checkout.createdAt | date : 'short'}}</span><br>
+                                    <span>Cập nhật ngày<br> {{checkout.updatedAt | date : 'short'}}</span><br>
+                                </td>
+                                <td>
+                                    <span>{{checkout.address}}</span><br>
+                                    <span *ngIf="checkout.address1">{{addressTrue(checkout)}}</span>
+                                    <!--                                    <span>{{checkout.wardId}},{{checkout.wardId}},{{checkout.provinceId}}</span>-->
+                                </td>
+                                <td>
+                                    <span>{{paymentMethod(checkout)}}</span>
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.coupon ? checkout.coupon.code : 'Không có'}}</span><br>
+                                    <span>{{checkout.coupon ? checkout.coupon.percent : 0}}%</span>
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.total}} VND</span><br>
+                                    <span>{{checkout.checkoutItems?.length}} Sản phẩm</span>
+                                </td>
+
+                                <td>
+                                    <span>{{formatMoney(checkout.finalprice)}}</span>
+                                </td>
+                                <td *ngIf="checkoutStatus === 0">{{checkout.note}}</td>
+                                <td *ngIf="checkoutStatus === -1">
+                                    <span *ngIf="checkout.status === 1" class="bg-success status-text">Đơn mới</span>
+                                    <span *ngIf="checkout.status === 2" class="bg-warning status-text">Vân chuyển</span>
+                                    <span *ngIf="checkout.status === 0" class="bg-danger status-text">Hủy</span>
+                                    <span *ngIf="checkout.status === 3" class="bg-info status-text">Hoàn thành</span>
+                                </td>
+                                <!--acction-->
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button (click)="changeStatus(checkout)"
+                                                *ngIf="checkout.status && checkout.status !== 0 && checkout.status !== 3"
+                                                type="submit"
+                                                class="btn btn-success btn-sm">
+                                            <!--                                            <i class="icon-pencil"></i>-->
+                                            <span *ngIf="checkout.status === 1"
+                                                  class="d-none d-md-inline">Vận chuyển</span>
+                                            <span *ngIf="checkout.status === 2"
+                                                  class="d-none d-md-inline">Hoàn thành</span>
+                                        </button>
+                                        <button type="submit"
+                                                *ngIf="checkout.status && checkout.status !== 0 && checkout.status !== 3"
+                                                (click)="remove(deleteModal, checkout)"
+                                                class="btn btn-danger btn-sm">
+                                            <i class="icon-trash"></i>
+                                            <span class="d-none d-md-inline">Hủy đơn</span>
+                                        </button>
+
+                                        <button
+                                                type="submit"
+                                                class="btn btn-info btn-sm" (click)="view(viewModal, checkout)">
+                                            <span class="d-none d-md-inline">Chi tiết</span>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </ng-container>
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+
+              <span *ngIf="checkouts.length !== 0 " style="line-height: 33px"
+                    class="float-left">{{pagingInfo(paging)}}
+                  </span>
+                            <ngb-pagination *ngIf="checkouts.length !== 0 " class="float-right" [boundaryLinks]="true"
+                                            [collectionSize]="paging.total"
+                                            [pageSize]="paging.limit" [maxSize]="5" [rotate]="true"
+                                            [(page)]="paging.page"
+                                            (pageChange)="loadPage(paging.page)">
+                            </ngb-pagination>
+                            <div *ngIf="!checkouts || checkouts.length === 0" class="text-center">
+                                <span>No Record</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #viewModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Chi tiết</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered table-sort-icon">
+            <thead>
+            <tr>
+                <th class="text-center">
+                    Ảnh
+                </th>
+
+                <th class="text-center">
+                    Tên
+                </th>
+
+                <th class="text-center">
+                    Số lượng
+                </th>
+
+                <th class="text-center">
+                    Giá tiền / 1 sản phẩm
+                </th>
+                <th>Tổng tiền</th>
+                <!--<th class="text-center">-->
+                <!--Thể loại-->
+                <!--</th>-->
+
+                <!--<th class="text-center">-->
+                <!--Nhà sản xuất-->
+                <!--</th>-->
+
+                <!--<th class="text-center">-->
+                <!--Mùi hương-->
+                <!--</th>-->
+
+                <!--<th class="text-center">-->
+                <!--Nồng độ-->
+                <!--</th>-->
+
+                <!--<th class="text-center">-->
+                <!--Highlights-->
+                <!--</th>-->
+            </tr>
+            </thead>
+            <ng-container *ngIf="products && products.length >= 0 && checkoutSl">
+                <tbody *ngFor="let checkoutItem of checkoutSl.checkoutItems; let i=index">
+                <tr *ngIf="checkoutItem.version && checkoutItem.version.product">
+                    <td>
+                        <a style="box-shadow: none;" [href]="getImage(checkoutItem.version.product.image)"
+                           target="_blank"
+                           class="image-popup prod-img-bg">
+                            <img class="img-fluid img-product" style="width: 50px;"
+                                 [src]="getImage(checkoutItem.version.product.image)">
+                        </a>
+                    </td>
+
+                    <td>
+                        <a [href]="'/product/' + checkoutItem.version.product.code" target="_blank">
+                            {{checkoutItem.version.product?.name}} <br>phiên bản {{checkoutItem.version.name}}
+                        </a>
+                    </td>
+                    <td>
+                        {{checkoutItem.quantity}}
+                    </td>
+
+                    <td>
+                        {{formatMoney(checkoutItem.version.price)}}
+                    </td>
+
+                    <td>
+                        {{formatMoney(checkoutItem.version.price * checkoutItem.quantity)}}
+                    </td>
+
+                    <!--<td>-->
+                    <!--{{product?.category?.name}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--{{product?.producer?.name}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--{{product?.fragrant?.name}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--{{product?.amount?.name}}-->
+                    <!--</td>-->
+                    <!--<td>-->
+                    <!--{{product?.highlights}}-->
+                    <!--</td>-->
+                </tr>
+                </tbody>
+            </ng-container>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">Đóng
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-comfirm-delete-title">Lý do hủy đơn</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <textarea [(ngModel)]="nodeDelete" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Hủy đơn
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">Đóng
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #saveModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Lưu</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        save
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger"
+                (click)="modal.close('save')">Lưu
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">close
+        </button>
+    </div>
+</ng-template>
+

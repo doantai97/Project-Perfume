@@ -1,0 +1,28 @@
+// If you want to override variables do it here
+@import "variables";
+//@import '~bootstrap/dist/css/bootstrap.min.css';
+// Import styles
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import "../../node_modules/@coreui/coreui/scss/coreui";
+// If you want to add something do it here
+@import "custom";
+
+.ftco-section {
+  background-color: #fff;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+}
+
+.hero-wrap .slider-text .bread {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+}
+
+p, h1, h2, h3, h4 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+}
+
+.text-color {
+  font-weight: 500;
+}

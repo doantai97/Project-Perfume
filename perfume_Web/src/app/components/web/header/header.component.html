@@ -1,0 +1,252 @@
+<div class="py-1 bg-black">
+    <div class="container" >
+        <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+            <div class="col-lg-12 d-block" id="goto-header">
+                <div class="row d-flex">
+                    <div class="col-lg-3 col-xs-6 pr-4 d-flex topper align-items-center">
+                        <div class="icon mr d-flex justify-content-center align-items-center"><span
+                                class="icon-phone2"></span></div>
+                        <span class="text">09755561378</span>
+                    </div>
+                    <div class="col-lg-3 col-xs-6 pr-4 d-flex topper align-items-center">
+                        <div class="icon mr d-flex justify-content-center align-items-center"><span
+                                class="icon-paper-plane"></span></div>
+                        <span class="text">thanglovemusic94@email.com</span>
+                    </div>
+                    <div class="col-lg-4 col-xs-6 pr-4 d-flex topper align-items-center text-lg-right">
+                        <span class="text">Hoạt động từ thứ 2 - 6 & 7am - 18pm</span>
+                    </div>
+                    <div class="col-lg-2 col-xs-6 pr-4 d-flex align-items-center text-lg-right dropdown">
+                        <img *ngIf="userLogin" [src]="getAvatar(userLogin.image)" alt="Avatar" class="avatar">
+                        <span *ngIf="userLogin" style="cursor: pointer; color: #fff;"
+                              class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">{{userLogin.username}}</span>
+                        <div *ngIf="userLogin" class="dropdown-menu" aria-labelledby="dropdown05">
+                            <a class="dropdown-item" *ngIf="isManager"
+                               [routerLink]="['/admin']">Quản Trị</a>
+                            <a style="cursor: pointer" class="dropdown-item" (click)="changeInfo(changeInfoModal)">Đổi
+                                thông tin cá nhân</a>
+                            <a style="cursor: pointer" class="dropdown-item"
+                               (click)="changePassword(changePasswordModal)">Đổi mật khẩu</a>
+                            <a style="cursor: pointer" class="dropdown-item" [routerLink]="['/checkout']">Trạng thái đơn
+                                hàng</a>
+                            <a style="cursor: pointer" class="dropdown-item" (click)="logout()">Logout</a>
+                        </div>
+
+                        <span *ngIf="!userLogin" class="text"><a [routerLink]="['/register']">Đăng Ký /</a>&nbsp;&nbsp;<a
+                                [routerLink]="['/login']">Đăng Nhập</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg  ftco_navbar ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand" [routerLink]="['/home']" style="font-weight: bold;
+        font-size: 30px;">Minishop</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a [routerLink]="['/home']" class="nav-link">Trang chủ</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Sản Phẩm</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a *ngFor="let category of categories" class="dropdown-item"
+                           [routerLink]="['/' + [CONSTANT_PATH.LIST_PRODUCT,category.code].join('/')]">{{category.name}}</a>
+                    </div>
+                </li>
+                <li class="nav-item"><a [routerLink]="['/' + CONSTANT_PATH.ABOUT]" class="nav-link">Về chúng tôi</a></li>
+                <li class="nav-item"><a [routerLink]="['/' + CONSTANT_PATH.BLOG]" class="nav-link">Tin tức</a></li>
+                <li class="nav-item"><a [routerLink]="['/' + CONSTANT_PATH.CONTACT]" class="nav-link">Liên hệ</a></li>
+                <li class="nav-item cta cta-colored"><a [routerLink]="['/' + CONSTANT_PATH.CART]" class="nav-link"><i
+                        class="fa fa-lg fa-cart-arrow-down"></i>[{{lengthCartItem}}]</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- END nav -->
+
+<ng-template #changePasswordModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Lưu</h4>
+        <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="changePasswordForm">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-lock"></i></span>
+                        </div>
+                        <input formControlName="oldPassworld" type="password" class="form-control"
+                               placeholder="Old password"
+                               autocomplete="new-password" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-lock"></i></span>
+                        </div>
+                        <input formControlName="password" type="password" class="form-control"
+                               placeholder="New password"
+                               autocomplete="new-password" required>
+                    </div>
+                    <div class="input-group mb-4">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-lock"></i></span>
+                        </div>
+                        <input formControlName="confirmPassword" type="password" class="form-control"
+                               placeholder="Repeat new password" autocomplete="new-password" required>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('save')">
+            Đổi
+        </button>
+        <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="modal.close('Close')"
+        >
+            close
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #changeInfoModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Lưu</h4>
+        <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="form-group">
+                    <fieldset class="form-group text-center">
+              <span class="text-danger">
+                {{ imageError }}
+              </span>
+                        <div class="custom-file fileInputProfileWrap">
+                            <input
+                                    type="file"
+                                    (change)="fileChangeEvent($event)"
+                                    class="fileInputProfile"
+                            />
+                            <div class="img-space">
+                                <ng-container *ngIf="isImageSaved; else elseTemplate">
+                                    <img [src]="cardImageBase64"/>
+                                </ng-container>
+                                <ng-template #elseTemplate>
+                                    <img
+                                            [src]="imageDefault"
+                                            class="img-responsive"
+                                    />
+                                </ng-template>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <a
+                        class="btn btn-danger"
+                        (click)="removeImage()"
+                        *ngIf="isImageSaved"
+                >Remove</a
+                >
+                <!--<img src="http://placehold.it/380x500" alt=""-->
+                <!--class="img-rounded img-responsive"/>-->
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Họ Tên</label>
+                    <div class="col-4">
+                        <input placeholder="firstname" class="form-control"
+                               [formControl]="userFormGroup.get('firstname')"/>
+                    </div>
+                    <div class="col-4">
+                        <input placeholder="lastname" class="form-control"
+                               [formControl]="userFormGroup.get('lastname')"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Email</label>
+                    <div class="col-8">
+                        <input [readonly]="isUpdate" placeholder="email" class="form-control"
+                               [formControl]="userFormGroup.get('email')"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Username</label>
+                    <div class="col-8">
+                        <input [readonly]="isUpdate" placeholder="username" class="form-control"
+                               [formControl]="userFormGroup.get('username')"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Địa Chỉ</label>
+                    <div class="col-8">
+                        <input placeholder="address" class="form-control"
+                               [formControl]="userFormGroup.get('address')"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Số điện thoại</label>
+                    <div class="col-8">
+                        <input placeholder="phone" class="form-control"
+                               [formControl]="userFormGroup.get('phone')"/>
+                    </div>
+                </div>
+                <!-- <div class="row mb-3">
+                    <label class="col-4 col-form-label">Quyền</label>
+                    <div class="col-8">
+                        <ng-multiselect-dropdown ngDefaultControl
+                                [placeholder]="'Chọn Quyền'"
+                                [data]="dropdownList"
+                                [(ngModel)]="selectedItems"
+                                [settings]="dropdownSettings"
+                                (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" *ngIf="isSave()" (click)="modal.close('save')">
+            Lưu
+        </button>
+        <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="modal.close('Close')"
+        >
+            Hủy
+        </button>
+    </div>
+</ng-template>

@@ -1,0 +1,241 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-globe"></i>Bình luận thuộc {{typeComment}} : {{post?.name}}
+                    <span class="float-right">
+            <button (click)="changeStatus()"
+                    class="btn btn-block btn-primary"
+            >
+              Hiện Thị Danh Sách Bình Luận {{statusComment? 'Ẩn' : 'Hiện'}}
+            </button></span
+                    >
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-10">
+              <span class="float-left pr-3" style="line-height: 33px"
+              >Limit</span
+              >
+                            <select
+                                    (change)="changeLimit()"
+                                    [(ngModel)]="paging.limit"
+                                    class="form-control float-left"
+                                    style="max-width: 70px"
+                            >
+                                <option
+                                        *ngFor="let limitElement of limits"
+                                        value="{{ limitElement.value }}"
+                                >{{ limitElement.label }}
+                                </option
+                                >
+                            </select>
+                        </div>
+                        <div class="col-2 float-right">
+                            <!--<div class="input-group " style="width: 100%">-->
+                                <!--<input-->
+                                        <!--type="text"-->
+                                        <!--class="form-control"-->
+                                        <!--placeholder="search"-->
+                                <!--/>-->
+                                <!--<div class="input-group-append">-->
+                                    <!--<button-->
+                                            <!--(click)="search()"-->
+                                            <!--class="btn btn-dark"-->
+                                            <!--type="button"-->
+                                    <!--&gt;-->
+                                        <!--<i class="fa fa-search"></i>-->
+                                    <!--</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-sort-icon">
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                Người Bình Luận
+                            </th>
+                            <th class="text-center">
+                                Số bình luận con
+                            </th>
+
+                            <th class="text-center">
+                                Thơi Gian
+                            </th>
+                            <th class="text-center">
+                                Nội dung
+                            </th>
+                            <th class="text-center" style="width: 200px">
+                                #
+                            </th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        <ng-container *ngFor="let comment of comments">
+
+                            <tr>
+                                <!--name -->
+                                <td>
+                                <span>
+                                  {{ comment.createdBy }}
+                                </span>
+                                </td>
+                                <td>
+                                <span>
+                                  {{ comment.subComments?.length }}
+                                </span>
+                                </td>
+
+                                <td>
+                                    {{comment.createdAt | date:'short'}}
+                                </td>
+                                <td>
+                                       <span>
+                                         {{ comment.content }}
+                                        </span>
+                                </td>
+
+                                <!--acction-->
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button *ngIf="statusComment" (click)="changeStatusComment(comment)"
+                                                type="submit"
+                                                class="btn btn-danger btn-sm"
+                                        >
+                                            <i class="icon-pencil"></i>
+                                            <span class="d-none d-md-inline">Ẩn</span>
+                                        </button>
+
+                                        <button *ngIf="!statusComment" (click)="changeStatusComment(comment)"
+                                                type="submit"
+                                                class="btn btn-success btn-sm"
+                                        >
+                                            <i class="icon-pencil"></i>
+                                            <span class="d-none d-md-inline">Hiện</span>
+                                        </button>
+
+                                        <button (click)="showSubComment(comment)" [disabled]="comment.subComments.length <= 0"
+                                                type="submit"
+                                                class="btn btn-info btn-sm"
+                                        >
+                                            <i class="icon-pencil"></i>
+                                            <span class="d-none d-md-inline">Bình luận con</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="comment.showSubComment && comment.subComments">
+                                <td colspan="5">
+                                    <div class="row mt-2" *ngFor="let subComment of comment.subComments">
+                                        <div class="col-2">{{subComment.createdBy}}</div>
+                                        <div class="col-2">{{subComment.createdAt | date:'short'}}</div>
+                                        <div class="col-7">{{subComment.content}}</div>
+                                        <div class="col-1" *ngIf="statusComment" ><button class="btn btn-danger btn-sm" (click)="changeStatusComment(subComment)" >
+                                            <i class="icon-pencil"></i>
+                                            <span class="d-none d-md-inline"> {{subComment.status == 1? "Ẩn" : "Hiện"}}</span>
+                                        </button></div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </ng-container>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+              <span
+                      *ngIf="comments.length !== 0"
+                      style="line-height: 33px"
+                      class="float-left"
+              >{{ pagingInfo(paging) }}
+              </span>
+                            <ngb-pagination
+                                    *ngIf="comments.length !== 0"
+                                    class="float-right"
+                                    [boundaryLinks]="true"
+                                    [collectionSize]="paging.total"
+                                    [pageSize]="paging.limit"
+                                    [maxSize]="5"
+                                    [rotate]="true"
+                                    [(page)]="paging.page"
+                                    (pageChange)="loadPage(paging.page)"
+                            >
+                            </ngb-pagination>
+                            <div
+                                    *ngIf="!comments || comments.length === 0"
+                                    class="text-center"
+                            >
+                                <span>No Record</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #deleteModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-delete-title">Xóa</h4>
+        <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Delete
+    </div>
+    <div class="modal-footer">
+        <button
+                type="button"
+                class="btn btn-danger"
+                (click)="modal.close('delete')"
+        >
+            Delete
+        </button>
+        <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="modal.close('Close')"
+        >
+            Close
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #saveModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Lưu</h4>
+        <button
+                type="button"
+                class="close"
+                aria-label="Close"
+                (click)="modal.dismiss('Cross click')"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        save
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('save')">
+            save
+        </button>
+        <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="modal.close('Close')"
+        >
+            close
+        </button>
+    </div>
+</ng-template>

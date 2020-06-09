@@ -1,0 +1,157 @@
+<!--<div class="hero-wrap hero-bread" style="background-image: url('assets/images/bg_6.jpg');">-->
+<!--<div class="container">-->
+<!--<div class="row no-gutters slider-text align-items-center justify-content-center">-->
+<!--<div class="col-md-9 ftco-animate text-center">-->
+<!--<p class="breadcrumbs"><span>Danh Sách Sản Phẩm</span></p>-->
+<!--<h1 class="mb-0 bread">Danh cho nữ</h1>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-5 ftco-animate fadeInUp ftco-animated">
+                <a [href]="getImg(this.product?.image)" class="image-popup prod-img-bg"><img style="width: 100%"
+                                                                                             [src]="getImg(this.product?.image)"
+                                                                                             class="img-fluid img-product"
+                                                                                             alt="Colorlib Template"></a>
+            </div>
+            <div class="col-lg-6 product-details pl-md-5 ftco-animate fadeInUp ftco-animated">
+                <h3>{{product?.name}}</h3>
+                <div class="rating d-flex">
+                    <p class="text-left mr-4">
+                        <a href="#" class="mr-2">5.0</a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                        <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    </p>
+                    <p class="text-left mr-4">
+                        <a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
+                    </p>
+                    <p class="text-left">
+                        <a href="#" class="mr-2" style="color: #000;">{{product?.totalSold? product.totalSold : 0}}<span
+                                style="color: #bbb;"> sản phẩm đã bán</span></a>
+                    </p>
+                </div>
+
+                <p class="price"><span>{{versionSelect?.price | currency:'VND':''}} VNĐ</span></p>
+
+                <div class="row">
+                    <div class="col-5">Nước hoa dành cho</div>
+                    <div class="col-7">
+                        <ul *ngIf="product?.targets">
+                            <li *ngFor="let target of product?.targets">{{target?.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">Phát hàng năm</div>
+                    <div class="col-7">
+                        {{product?.year}}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5">Mang mùi hương <strong>{{product?.fragrant?.name}}</strong></div>
+                    <div class="col-7" [innerHTML]="product?.fragrant.description"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-5">Nồng độ <strong>{{product?.amount?.name}}</strong></div>
+                    <div class="col-7" [innerHTML]="product?.amount?.description"></div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="form-group d-flex">
+                            <div class="select-wrap">
+                                <div class="icon"><span><i class="fa fa-angle-down" aria-hidden="true"></i></span></div>
+                                <select [(ngModel)]="versionSelect" class="form-control" *ngIf="versionSelect">
+                                    <option *ngFor="let version of product?.versions" [ngValue]="version">
+                                        {{version?.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="input-group col-md-6 d-flex mb-3">
+	             	<span class="input-group-btn mr-2">
+	                	<button (click)="downQuantity()" type="button" class="quantity-left-minus btn" data-type="minus"
+                                data-field="">
+	                   <i class="fa fa-minus"></i>
+	                	</button>
+	            		</span>
+                        <input (change)="changeQuantity()" type="number" [(ngModel)]="quantity" id="quantity"
+                               name="quantity"
+                               class="quantity form-control input-number"
+                               value="1" min="1" max="100">
+                        <span class="input-group-btn ml-2">
+	                	<button (click)="upQuantity()" type="button" class="quantity-right-plus btn" data-type="plus"
+                                data-field="">
+	                     <i class="fa fa-plus"></i>
+	                 </button>
+	             	</span>
+                    </div>
+                    <div class="w-100"></div>
+                    <div class="col-md-12">
+                        <p style="color: #000;">{{versionSelect?.totalSold? versionSelect?.totalSold : 0}} phiển bản {{versionSelect?.name}} đã bán</p>
+                    </div>
+                </div>
+                <p><a style="color:#fff" (click)="addCartItem()" class="btn btn-black py-3 px-5 mr-2">Thêm vào giỏ hàng</a>
+                    <a (click)="addCartItem(true)"
+                       class="btn btn-primary py-3 px-5">Mua ngay</a></p>
+
+                        <!-- https://developers.facebook.com/docs/plugins/like-button/ -->
+                <div class="fb-like" data-href="http://localhost:4200/blog/mach-ban-cach-chon-nuoc-hoa-phu-hop-voi-hoan-canh-lan-tinh-cach--the-gioi-nuoc-hoa" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+                <!-- https://developers.zalo.me/docs/social/zalo-chat-widget -->
+                <div class="zalo-share-button" style="top: 5px;
+    position: relative;     margin-left: 5px;" data-href="" data-oaid="579745863508352884" data-layout="1" data-color="blue" data-customize=false></div>
+            </div>
+        </div>
+
+
+        <div class="row mt-2">
+            <div class="col-md-12 nav-link-wrap">
+                <div class="nav nav-pills d-flex text-center" id="v-pills-tab" role="tablist"
+                     aria-orientation="vertical">
+                    <a class="nav-link ftco-animate active mr-lg-1 fadeInUp ftco-animated" id="v-pills-1-tab"
+                       data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Mô Tả</a>
+
+                    <a class="nav-link ftco-animate mr-lg-1 fadeInUp ftco-animated" id="v-pills-2-tab"
+                       data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">Sản
+                        xuất bởi {{product?.producer.name}}</a>
+
+                    <a class="nav-link ftco-animate fadeInUp ftco-animated" id="v-pills-3-tab" data-toggle="pill"
+                       href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">Đánh giá</a>
+
+                </div>
+            </div>
+            <div class="col-md-12 tab-wrap">
+
+                <div class="tab-content bg-light" id="v-pills-tabContent">
+
+                    <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="day-1-tab">
+                        <div class="p-2">
+                            <h3 class="mb-4">{{product?.name}}</h3>
+                            <div [innerHTML]="product?.description"></div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-day-2-tab">
+                        <div class="p-2">
+                            <h3 class="mb-4">{{product?.producer.name}}</h3>
+                            <div [innerHTML]="product?.producer?.description"></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-day-3-tab">
+                        <app-show-comment [postId]="product.id" [type]="COMMENT_TYPE.PRODUCT"></app-show-comment>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

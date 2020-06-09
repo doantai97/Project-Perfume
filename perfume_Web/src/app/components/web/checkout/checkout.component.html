@@ -1,0 +1,174 @@
+<div class="hero-wrap hero-bread" style="background-image: url('assets/images/bg_6.jpg');">
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs"><span>Lích sử giao dịch</span></p>
+                <h1 class="mb-0 bread">Danh sách đơn hàng</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="animated fadeIn">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-10">
+                            <span class="float-left pr-3" style="line-height: 33px">Limit</span>
+                            <select (change)="changeLimit()" [(ngModel)]="paging.limit" class="form-control float-left"
+                                    style="max-width: 70px" [disabled]="!isAcction">
+                                <option *ngFor="let limitElement of limits"
+                                        value="{{limitElement.value}}">{{limitElement.label}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-2 float-right">
+                            <div class="input-group " style="width: 100%">
+                                <input [(ngModel)]="txtSearch" type="text" class="form-control"
+                                       placeholder="search">
+                                <div class="input-group-append">
+                                    <button (click)="search()" class="btn btn-dark" type="button"
+                                            [disabled]="!isAcction">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <table class="table table-bordered table-sort-icon">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th class="text-center">
+                                Thông tin nhận hàng
+                            </th>
+
+                            <th class="text-center">
+                                Địa chỉ
+                            </th>
+
+                            <th class="text-center">
+                                Hình thức thanh toán
+                            </th>
+
+                            <th class="text-center">
+                                Mã giảm giá
+                            </th>
+                            <th>
+                                Tổng tiền
+                            </th>
+                            <th> Giá cuối</th>
+                            <th class="text-center" style="width: 200px">
+                                Trạng thái
+                            </th>
+                        </tr>
+                        </thead>
+                        <ng-container *ngIf="checkouts && checkouts.length >= 0">
+                            <tbody *ngFor="let checkout of checkouts; let i=index">
+                            <tr *ngIf="checkout"
+                                [style]="checkout.id === checkoutFormGroup.get('id').value && checkoutFormGroup.get('isShow').value? 'background : #dbcc8f' : ''">
+                                <!--name -->
+                                <td>
+                                    {{i + 1 + paging.offset}}
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.lastname}} {{checkout.firstname}}</span><br>
+                                    <span>{{checkout.email}}</span><br>
+                                    <span>{{checkout.phone}}</span>
+                                </td>
+                                <td>
+                                    <span>{{checkout.address}}</span><br>
+                                    <span *ngIf="checkout.address1">{{addressTrue(checkout)}}</span>
+                                    <!--                                    <span>{{checkout.wardId}},{{checkout.wardId}},{{checkout.provinceId}}</span>-->
+                                </td>
+                                <td>
+                                    <span>{{paymentMethod(checkout)}}</span>
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.coupon ? checkout.coupon.code : 'Không có'}}</span><br>
+                                    <span>{{checkout.coupon ? checkout.coupon.percent : 0}}%</span>
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.total}} VND</span><br>
+                                    <span>{{checkout.checkoutItems?.length}} Sản phẩm</span>
+                                </td>
+
+                                <td>
+                                    <span>{{checkout.finalprice}} VND</span>
+                                </td>
+                                <td *ngIf="checkout.status === 0">Đã hủy</td>
+                                <td *ngIf="checkout.status === 1">Đang chờ</td>
+                                <td *ngIf="checkout.status === 2">Đang vận chuyển</td>
+                                <td *ngIf="checkout.status === 3">Đã thanh toán</td>
+                            </tr>
+                            </tbody>
+                        </ng-container>
+                    </table>
+                    <div class="row">
+                        <div class="col-12">
+
+              <span *ngIf="checkouts.length !== 0 " style="line-height: 33px"
+                    class="float-left">{{pagingInfo(paging)}}
+                  </span>
+                            <ngb-pagination *ngIf="checkouts.length !== 0 " class="float-right" [boundaryLinks]="true"
+                                            [collectionSize]="paging.total"
+                                            [pageSize]="paging.limit" [maxSize]="5" [rotate]="true"
+                                            [(page)]="paging.page"
+                                            (pageChange)="loadPage(paging.page)">
+                            </ngb-pagination>
+                            <div *ngIf="!checkouts || checkouts.length === 0" class="text-center">
+                                <span>No Record</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #deleteModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title"
+            id="modal-comfirm-delete-title">Lý do hủy đơn</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <textarea [(ngModel)]="nodeDelete" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('delete')">Hủy đơn
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">Đóng
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #saveModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Save</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        save
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger"
+                (click)="modal.close('save')">save
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">close
+        </button>
+    </div>
+</ng-template>

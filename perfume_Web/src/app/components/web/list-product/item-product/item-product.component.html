@@ -1,0 +1,60 @@
+<div class="product d-flex flex-column" *ngIf="product">
+    <div *ngIf="isHot" style="position: absolute; top: 0; left: 0;width: 60px;height: 50px;z-index: 100">
+        <img style="width: 100%" src="assets/gif/hot.gif">
+    </div>
+    <div *ngIf="isNew" style="position: absolute; top: 0; right: 0;width: 60px;height: 50px;z-index: 100">
+        <img style="width: 100%" src="assets/gif/new.gif">
+    </div>
+    <a
+            [routerLink]="[
+                  '/' + [CONSTANT_PATH.DETAIL_PRODUCT, product.code].join('/')
+                ]"
+            class="img-prod"
+    ><img style="width: 100%"
+          class="img-fluid"
+          [src]="SERVER_API_IMAGE + product.image"
+          alt="Colorlib Template"
+    />
+        <div class="overlay"></div>
+    </a>
+    <div class="text py-3 pb-4 px-3">
+        <div class="d-flex">
+            <!-- <div class="cat">
+                <span>Lifestyle</span>
+            </div> -->
+            <div class="rating">
+                <p class="text-right mb-0">
+                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                    <a href="#"><span class="ion-ios-star-outline"></span></a>
+                </p>
+            </div>
+        </div>
+        <h3>
+            <a [routerLink]="['/' + [CONSTANT_PATH.DETAIL_PRODUCT, product.code].join('/')]"
+            >{{ product.name }}</a>
+        </h3>
+        <div class="pricing">
+            <p class="price">
+                    <span
+                    >{{ formatMoney(versionSelect?.price) }} cho phiên bản
+                      {{ versionSelect?.name }}</span
+                    >
+            </p>
+        </div>
+        <p class="bottom-area d-flex px-3">
+            <a
+                    (click)="addCartItem()"
+                    class="add-to-cart text-center py-2 mr-1"
+            ><span>Thêm vào giỏ hàng <i class="ion-ios-add ml-1"></i></span
+            ></a>
+            <a class="buy-now text-center py-2"
+               (click)="addCartItem(true)"
+            >Mua ngay<span><i class="ion-ios-cart ml-1"></i></span
+            ></a>
+        </p>
+    </div>
+</div>
+

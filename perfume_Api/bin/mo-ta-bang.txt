@@ -1,0 +1,33 @@
+status là thuộc tính xem sản phẩm đó đã xóa hay chưa (xóa ảo không xóa cứng trong đb)
+create_at ngày tọa
+update_at ngày sửa 
+quatity : số lượng sản phẩm 
+descripttion : mô tả 
+
+product - sản phẩm
+	exp : hản sử dụng
+	mfg : ngày sản xuất
+	code : đường dẫn url của phẩm (để query trên web user)
+	descripttion : mô tả 
+	highlight : HOT - NEW - ....
+	name : tên
+	AMOUNT : nồng độ (n - 1 với product)
+	CATEGORY : thể loại (n - 1 với product)
+	FRAGRANT : mùi hương (n - 1 với product)
+	PRODUCER : nhà sản xuất (n - 1 với product)
+	TARGET : đối tượng sử dụng (phụ nữ, đàn ông ...) n - n với product 
+	RATING : xếp hạng sao do người dùng đánh giá (n - n) với product
+	VERSION : phiên bản của sản phẩm (loại 100 ml , 150ml,...)
+
+
+
+CART_ITEM : sản phẩm có trong cart của người dùng
+	n - 1 với USER
+	1 - n với PRODCUT
+	quatity : số lượng sản phẩm 
+
+CHECKOUT : bảng thanh toán chưa 1 list checkout_item và USERẩm
+
+CHECKOUT_ITEM : chứa sản phẩm có trong CHECKOUT
+
+

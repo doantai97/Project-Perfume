@@ -1,0 +1,73 @@
+<div class="row p-2">
+    <div class="input-group">
+                                <textarea [(ngModel)]="contentComment" rows="3" class="form-control"
+                                          placeholder="nhập bình luận" aria-label="Recipient's username"
+                                          aria-describedby="basic-addon2"></textarea>
+        <div (click)="sendComment()" class="input-group-append" style="cursor: pointer">
+            <span class="input-group-text" id="basic-addon2">Gửi Bình Luận</span>
+        </div>
+    </div>
+</div>
+<div class="row p-2">
+    <div class="col-md-12">
+        <h3 class="mb-4">{{paging.total}} Bình luận</h3>
+        <div class="review" *ngFor="let item of comments" style="margin-bottom: 3rem">
+            <div class="user-img"
+                 [style.background-image]="'url(' + getBackgroundImage(item.user.image) + ')'"></div>
+            <div class="desc" style="margin-bottom: 3rem">
+                <h4>
+                    <span class="text-left">{{item.user.lastname}} {{item.user.firstname}}</span>
+                    <span class="text-right">{{item.createdAt | date:'short'}}</span>
+                </h4>
+                <p>{{item.content}}</p>
+                <a (click)="showInputComment(item)"
+                   style="float: right;transition: .3s all ease;color: #454b44; cursor: pointer">Trả
+                    lời bình luận</a>
+
+
+            </div>
+            <!--Sub comment-->
+            <ng-container *ngIf="item.subComments">
+                <div *ngFor="let subItem of item.subComments" class="review"
+                     style="padding-left: 5rem">
+                    <div class="user-img"
+                         [style.background-image]="'url(' + getBackgroundImage(subItem.user.image) + ')'"></div>
+                    <div class="desc">
+                        <h4>
+                            <span class="text-left">{{subItem.user.lastname}} {{subItem.user.firstname}}</span>
+                            <span class="text-right">{{subItem.createdAt | date:'short'}}</span>
+                        </h4>
+                        <p>{{subItem.content}}</p>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="input-group mt-3" *ngIf="item.isComment">
+                                <textarea [(ngModel)]="item.subContent" rows="2" class="form-control"
+                                          placeholder="Recipient's username" aria-label="Recipient's username"
+                                          aria-describedby="basic-addon2"></textarea>
+                <div (click)="sendComment(item)" class="input-group-append"
+                     style="cursor: pointer">
+                    <span class="input-group-text" id="basic-addon2">Gửi Bình Luận</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col text-center">
+        <ngb-pagination
+                [boundaryLinks]="true"
+                [collectionSize]="paging.total"
+                [pageSize]="paging.limit"
+                [maxSize]="5"
+                [rotate]="true"
+                [(page)]="paging.page"
+                (pageChange)="loadPage(paging.page)"
+        >
+        </ngb-pagination>
+    </div>
+</div>
+

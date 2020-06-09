@@ -1,0 +1,454 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header"><strong>Basic Form</strong> Elements</div>
+                <div class="card-body">
+                    <form [formGroup]="productFormGroup">
+                        <div class="row">
+                            <div class="col-4" style="display: inline-block">
+                                <div class="form-group">
+                                    <fieldset class="form-group text-center">
+                                      <span class="text-danger">
+                                        {{ imageError }}
+                                      </span>
+                                        <div class="custom-file fileInputProfileWrap">
+                                            <input
+                                                    type="file"
+                                                    (change)="fileChangeEvent($event)"
+                                                    class="fileInputProfile"
+                                            />
+                                            <div class="img-space">
+                                                <ng-container *ngIf="isImageSaved; else elseTemplate">
+                                                    <img [src]="cardImageBase64"/>
+                                                </ng-container>
+                                                <ng-template #elseTemplate>
+                                                    <img
+                                                            [src]="imageDefault"
+                                                            class="img-responsive"
+                                                    />
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <a
+                                        class="btn btn-danger"
+                                        (click)="removeImage()"
+                                        *ngIf="isImageSaved"
+                                >Remove</a
+                                >
+                            </div>
+                            <div class="col-8" style="display: inline-block">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">name</label>
+                                    <div class="col-md-7">
+                                        <input
+                                                type="text"
+                                                name="text-input"
+                                                formControlName="name"
+                                                (focusout)="focusoutName()"
+                                                placeholder="Text"
+                                                class="form-control"
+                                        /><span
+                                            class="help-block text-danger"
+                                            *ngIf="productFormGroup.get('name').invalid"
+                                    >Tên không phù hợp</span
+                                    >
+                                    </div>
+
+                                    <div class="col-md-2 col-form-label">
+                                        <div class="form-check form-check-inline mr-1">
+                                            <input
+                                                    type="checkbox"
+                                                    (change)="changeHot($event)"
+                                                    [checked]="isHot"
+                                                    value="HOT"
+                                                    class="form-check-input"
+                                            /><label class="form-check-label">HOT</label>
+                                        </div>
+                                        <div class="form-check form-check-inline mr-1">
+                                            <input
+                                                    type="checkbox"
+                                                    (change)="changeNew($event)"
+                                                    [checked]="isNew"
+                                                    value="NEW"
+                                                    class="form-check-input"
+                                            /><label class="form-check-label">NEW</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">Đường dẫn</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <input
+                                                    type="text"
+                                                    [readOnly]="isCustomUri"
+                                                    formControlName="code"
+                                                    placeholder="Đường dẫn"
+                                                    class="form-control"
+                                            />
+                                            <div class="input-group-append">
+                                         <span (click)="isCustomUri = !isCustomUri" class="input-group-text">
+                                             <i class="fa fa-user"></i>
+                                         </span>
+                                            </div>
+                                        </div>
+                                        <span
+                                                class="help-block text-danger"
+                                                *ngIf="productFormGroup.get('code').invalid"
+                                        >Đường dẫn không phù hợp</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">Năm sản xuất</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control" formControlName="year">
+                                            <option *ngFor="let year of years" [value]="year">Năm {{year}}</option>
+                                        </select>
+                                        <!--                                    <span class="help-block">Please enter a valid date</span>-->
+                                    </div>
+                                </div>
+
+                                <!--<div class="form-group row">-->
+                                    <!--<label class="col-md-3 col-form-label">MFG</label>-->
+                                    <!--<div class="col-md-9">-->
+                                        <!--<input-->
+                                                <!--type="date"-->
+                                                <!--name="date-input"-->
+                                                <!--placeholder="date"-->
+                                                <!--class="form-control"-->
+                                        <!--/>-->
+                                        <!--&lt;!&ndash;                                    <span class="help-block">Please enter a valid date</span>&ndash;&gt;-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">Mô tả</label>
+                                    <div class="col-md-9">
+                                        <!-- <textarea name="textarea-input" rows="9"
+                                                                                      formControlName="description"
+                                                                                      placeholder="Content.." class="form-control"></textarea> -->
+                                        <ckeditor
+                                                formControlName="description"
+                                        ></ckeditor>
+                                        <span
+                                                class="help-block text-danger"
+                                                *ngIf="productFormGroup.get('description').invalid"
+                                        >Không có mô tả</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label">Đối tượng </label>
+                                    <div class="col-md-9">
+                                        <select
+                                                name="multiple-select"
+                                                size="5"
+                                                formControlName="targets"
+                                                multiple=""
+                                                class="form-control"
+                                        >
+                                            <option
+                                                    *ngFor="let target of targets; index as i"
+                                                    [ngValue]="target"
+                                            >
+                                                {{ target.name }}
+                                            </option>
+                                        </select>
+                                        <span
+                                                class="help-block text-danger"
+                                                *ngIf="productFormGroup.get('targets').invalid"
+                                        >Không có đối tượng</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label"
+                                    >Thể Loại
+                                    </label>
+                                    <div class="col-md-9">
+                                        <select
+                                                name="select1"
+                                                class="form-control"
+                                                formControlName="category"
+                                        >
+                                            <option
+                                                    *ngFor="let category of categories"
+                                                    [ngValue]="category"
+                                            >{{ category.name }}
+                                            </option
+                                            >
+                                        </select>
+                                        <span
+                                                class="help-block text-danger"
+                                                *ngIf="productFormGroup.get('category').invalid"
+                                        >Đường dẫn không phù hợp</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label"
+                                    >NSX
+                                    </label>
+                                    <div class="col-md-9">
+                                        <select
+                                                name="select1"
+                                                class="form-control"
+                                                formControlName="producer"
+                                        >
+                                            <option
+                                                    *ngFor="let producer of producers"
+                                                    [ngValue]="producer"
+                                            >{{ producer.name }}
+                                            </option
+                                            >
+                                        </select>
+                                        <span
+                                                class="help-block text-danger"
+                                                *ngIf="productFormGroup.get('producer').invalid"
+                                        >Đường dẫn không phù hợp</span
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label"
+                                    >Mùi Hương
+                                    </label>
+                                    <div class="col-md-9">
+                                        <select formControlName="fragrant" class="form-control">
+                                            <option
+                                                    *ngFor="let fragrant of fragrants"
+                                                    [ngValue]="fragrant"
+                                            >{{ fragrant.name }}
+                                            </option
+                                            >
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-3 col-form-label"
+                                    >Nồng Độ
+                                    </label>
+                                    <div class="col-md-9">
+                                        <select formControlName="amount" class="form-control">
+                                            <option *ngFor="let amount of amounts" [ngValue]="amount">
+                                                {{ amount.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table class="table table-bordered table-sort-icon">
+                        <thead>
+                        <tr>
+                            <th class="text-center">
+                                Dung tích
+                            </th>
+
+                            <th class="text-center">
+                                Số lượng
+                            </th>
+                            <th class="text-center">
+                                Giá
+                            </th>
+                            <th class="text-center" style="width: 200px">
+                                Thao tác
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let version of versions; index as indexVersion">
+                            <ng-container *ngIf="version.isUpdate">
+                                <td>
+                                    <input
+                                            [formControl]="versionUpdateGroup.get('name')"
+                                            class="form-control"
+                                            placeholder="Dung tích"
+                                    />
+                                    <span
+                                            class="text-danger"
+                                            *ngIf="versionUpdateGroup.get('name').invalid"
+                                    >Tên không hợp lệ</span
+                                    >
+                                </td>
+                                <td>
+                                    <input
+                                            [formControl]="versionUpdateGroup.get('total')"
+                                            class="form-control"
+                                            type="number"
+                                            placeholder="Số lượng"
+                                    />
+                                    <span
+                                            class="text-danger"
+                                            *ngIf="versionUpdateGroup.get('total').invalid"
+                                    >Số lượng phải > 0</span
+                                    >
+                                </td>
+                                <td>
+                                    <input
+                                            [formControl]="versionUpdateGroup.get('price')"
+                                            class="form-control"
+                                            type="number"
+                                            placeholder="Giá"
+                                    />
+                                    <span
+                                            class="text-danger"
+                                            *ngIf="versionUpdateGroup.get('price').invalid"
+                                    >Giá phải > 0</span
+                                    >
+                                </td>
+                                <!--acction-->
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button (click)="editVersion(version)"
+                                                type="submit"
+                                                [disabled]="versionFromGroup.invalid"
+                                                class="btn btn-primary btn-sm"
+                                        >
+                                            <i class="icon-trash"></i>
+                                            <span class="d-none d-md-inline">Lưu</span>
+                                        </button>
+                                        <button (click)="version.isUpdate = false"
+                                                type="submit"
+                                                [disabled]="versionFromGroup.invalid"
+                                                class="btn btn-primary btn-sm"
+                                        >
+                                            <i class="icon-trash"></i>
+                                            <span class="d-none d-md-inline">Hủy</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container *ngIf="!version.isUpdate">
+                                <td>
+                                    {{ version.name }}
+                                </td>
+                                <td>
+                                    {{ version.total }}
+                                </td>
+                                <td>
+                                    {{ version.price }}
+                                </td>
+                                <!--acction-->
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <!--                                    <button-->
+                                        <!--                                            type="submit"-->
+                                        <!--                                            class="btn btn-success btn-sm">-->
+                                        <!--                                        <i class="icon-pencil"></i>-->
+                                        <!--                                        <span class="d-none d-md-inline">Sửa</span>-->
+                                        <!--                                    </button>-->
+                                        <button
+                                                type="submit"
+                                                (click)="removeVersion(indexVersion)"
+                                                class="btn btn-danger btn-sm"
+                                        >
+                                            <i class="icon-trash"></i>
+                                            <span class="d-none d-md-inline">Xóa</span>
+                                        </button>
+
+                                        <button (click)="setUpEditVersion(version)"
+                                                type="submit"
+                                                class="btn btn-info btn-sm"
+                                        >
+                                            <i class="icon-trash"></i>
+                                            <span class="d-none d-md-inline">Sửa</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input
+                                        [formControl]="versionFromGroup.get('name')"
+                                        class="form-control"
+                                        placeholder="Dung tích"
+                                />
+                                <span
+                                        class="text-danger"
+                                        *ngIf="versionFromGroup.get('name').invalid"
+                                >Tên không hợp lệ</span
+                                >
+                            </td>
+                            <td>
+                                <input
+                                        [formControl]="versionFromGroup.get('total')"
+                                        class="form-control"
+                                        type="number"
+                                        placeholder="Số lượng"
+                                />
+                                <span
+                                        class="text-danger"
+                                        *ngIf="versionFromGroup.get('total').invalid"
+                                >Số lượng phải > 0</span
+                                >
+                            </td>
+                            <td>
+                                <input
+                                        [formControl]="versionFromGroup.get('price')"
+                                        class="form-control"
+                                        type="number"
+                                        placeholder="Giá"
+                                />
+                                <span
+                                        class="text-danger"
+                                        *ngIf="versionFromGroup.get('price').invalid"
+                                >Giá phải > 0</span
+                                >
+                            </td>
+                            <!--acction-->
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <button
+                                            type="submit"
+                                            (click)="addVersion()"
+                                            [disabled]="versionFromGroup.invalid"
+                                            class="btn btn-primary btn-sm"
+                                    >
+                                        <i class="icon-trash"></i>
+                                        <span class="d-none d-md-inline">Thêm</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-12">
+            <span class="text-danger" *ngIf="versions.length == 0"
+            >Chưa nhập phiên bản</span
+            >
+                    </div>
+                </div>
+                <div class="card-footer" style="text-align: right">
+                    <button
+                            *ngIf="isSave()"
+                            (click)="save()"
+                            type="submit"
+                            class="btn btn-sm btn-primary"
+                    >
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                    <button (click)="test()" type="reset" class="btn btn-sm btn-danger">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

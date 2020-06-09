@@ -1,0 +1,179 @@
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-118965717-3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    // Shared ID
+    gtag('config', 'UA-118965717-3');
+    // Angular ID
+    gtag('config', 'UA-118965717-4');
+</script>
+<app-header [navbarBrandRouterLink]="['/admin/dashboard']" [fixed]="true"
+    [navbarBrandFull]="{src: 'assets/img/brand/logo.svg', width: 89, height: 25, alt: 'CoreUI Logo'}"
+    [navbarBrandMinimized]="{src: 'assets/img/brand/sygnet.svg', width: 30, height: 30, alt: 'CoreUI Logo'}"
+    [sidebarToggler]="'lg'" [asideMenuToggler]="'lg'">
+    <ul class="nav navbar-nav d-md-down-none">
+        <!--<li class="nav-item px-3">-->
+        <!--<a class="nav-link" [routerLink]="['/admin/dashboard']">Dashboard</a>-->
+        <!--</li>-->
+        <!--<li class="nav-item px-3">-->
+        <!--<a class="nav-link" [routerLink]="['/admin/user']">Users</a>-->
+        <!--</li>-->
+    </ul>
+    <ul class="nav navbar-nav ml-auto">
+        <li class="nav-item dropdown d-flex align-items-baseline" dropdown placement="bottom right">
+            <span style="padding-right: 5px">{{userLogin?.lastname}} {{userLogin?.firstname}}</span>
+            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                dropdownToggle (click)="false">
+                <img [src]="getAvatar()" class="img-avatar" alt="admin@bootstrapmaster.com" />
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+                <a class="dropdown-item" [routerLink]="['/home']"><i class="fa fa-home"></i>Trang chủ</a>
+                <a class="dropdown-item" (click)="changeInfo(changeInfoModal)"><i class="fa fa-user"></i>Profile</a>
+                <a class="dropdown-item" (click)="logout()"><i class="fa fa-lock"></i>Đăng xuất</a>
+            </div>
+        </li>
+    </ul>
+</app-header>
+<div class="app-body">
+    <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized"
+        (minimizedChange)="toggleMinimize($event)">
+        <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+        <app-sidebar-minimizer></app-sidebar-minimizer>
+    </app-sidebar>
+    <!-- Main content -->
+    <main class="main">
+        <!-- Breadcrumb -->
+        <!-- breaking change 'cui-breadcrumb' -->
+        <cui-breadcrumb>
+            <!-- Breadcrumb Menu-->
+            <!--<li class="breadcrumb-menu d-md-down-none">-->
+            <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+            <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
+            <!--<a class="btn" [routerLink]="['/admin/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
+            <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
+            <!--</div>-->
+            <!--</li>-->
+        </cui-breadcrumb>
+        <!-- deprecation warning for 'app-breadcrumb' -->
+        <!--<ol class="breadcrumb">-->
+        <!--<app-breadcrumb></app-breadcrumb>-->
+        <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
+        <!--<li class="breadcrumb-menu d-md-down-none">-->
+        <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+        <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
+        <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
+        <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--</ol>-->
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div><!-- /.container-fluid -->
+    </main>
+</div>
+<app-footer>
+    <span><a href="https://coreui.io">Perfume</a> &copy; 2018 creativeLabs.</span>
+    <span class="ml-auto">Hệ thống được phát triển bởi <a href="https://coreui.io/angular">Perfume dev</a></span>
+</app-footer>
+
+<ng-template #changeInfoModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-comfirm-save-title">Lưu</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="form-group">
+                    <fieldset class="form-group text-center">
+                        <span class="text-danger">
+                            {{ imageError }}
+                        </span>
+                        <div class="custom-file fileInputProfileWrap">
+                            <input type="file" (change)="fileChangeEvent($event)" class="fileInputProfile" />
+                            <div class="img-space">
+                                <ng-container *ngIf="isImageSaved; else elseTemplate">
+                                    <img [src]="cardImageBase64" />
+                                </ng-container>
+                                <ng-template #elseTemplate>
+                                    <img [src]="imageDefault" class="img-responsive" />
+                                </ng-template>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <a class="btn btn-danger" (click)="removeImage()" *ngIf="isImageSaved">Remove</a>
+                <!--<img src="http://placehold.it/380x500" alt=""-->
+                <!--class="img-rounded img-responsive"/>-->
+            </div>
+            <div class="col-sm-6 col-md-8">
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Họ Tên</label>
+                    <div class="col-4">
+                        <input placeholder="firstname" class="form-control"
+                            [formControl]="userFormGroup.get('firstname')" />
+                    </div>
+                    <div class="col-4">
+                        <input placeholder="lastname" class="form-control"
+                            [formControl]="userFormGroup.get('lastname')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Email</label>
+                    <div class="col-8">
+                        <input placeholder="email" class="form-control" [formControl]="userFormGroup.get('email')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Username</label>
+                    <div class="col-8">
+                        <input [readonly]="true" placeholder="username" class="form-control"
+                            [formControl]="userFormGroup.get('username')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Địa Chỉ</label>
+                    <div class="col-8">
+                        <input placeholder="address" class="form-control"
+                            [formControl]="userFormGroup.get('address')" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-4 col-form-label">Số điện thoại</label>
+                    <div class="col-8">
+                        <input placeholder="phone" class="form-control" [formControl]="userFormGroup.get('phone')" />
+                    </div>
+                </div>
+                <!-- <div class="row mb-3">
+                    <label class="col-4 col-form-label">Quyền</label>
+                    <div class="col-8">
+                        <ng-multiselect-dropdown ngDefaultControl
+                                [placeholder]="'Chọn Quyền'"
+                                [data]="dropdownList"
+                                [(ngModel)]="selectedItems"
+                                [settings]="dropdownSettings"
+                                (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)"
+                        >
+                        </ng-multiselect-dropdown>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" *ngIf="isSave()" class="btn btn-danger" (click)="modal.close('save')">
+            Lưu
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close')">
+            Hủy
+        </button>
+    </div>
+</ng-template>

@@ -1,0 +1,53 @@
+<div class="hero-wrap hero-bread" style="background-image: url('assets/images/bg_6.jpg');">
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <p class="breadcrumbs"><span>Tin tức mới nhất</span></p>
+                <h1 class="mb-0 bread">Về nước hoa</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 d-flex ftco-animate fadeInUp ftco-animated" *ngFor="let news of listNews">
+                <div class="blog-entry align-self-stretch d-md-flex">
+                    <a href="blog-single.html" class="block-20" [routerLink]="[news.url]"
+                       [style.background-image]="'url(' + getBackgroundImage(news.image) + ')'">
+                    </a>
+                    <div class="text d-block pl-md-4">
+                        <div class="meta mb-3">
+                            <div><a href="#">{{news.updatedAt | date:'short'}}</a></div>
+                            <div><a href="#">{{news.lastModifiedBy}}</a></div>
+                        </div>
+                        <h3 class="heading">
+                            <a [routerLink]="[news.url]">{{news.title}}</a>
+                        </h3>
+                        <p>
+                            {{news.description}}
+                        </p>
+                        <p>
+                            <a [routerLink]="[news.url]" class="btn btn-primary py-2 px-3">Đọc thêm</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col text-center">
+                <ngb-pagination
+                        [boundaryLinks]="true"
+                        [collectionSize]="paging.total"
+                        [pageSize]="paging.limit"
+                        [maxSize]="5"
+                        [rotate]="true"
+                        [(page)]="paging.page"
+                        (pageChange)="loadPage(paging.page)"
+                >
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
+</section>
